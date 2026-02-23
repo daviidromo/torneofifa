@@ -3,8 +3,8 @@ session_start();
 
 // Datos iniciales
 $jugadores = [
-    "Romo", "Reyes", "Figueroa", "Huevo", 
-    "Josete", "Carlos", "Jogi", "Ivanoskyx"
+    "Romo", "Alejandro", "Mario", "Sergio", 
+    "David", "Gabriel", "Adrian", "Alvaro", "Javi"
 ];
 
 $equipos = [

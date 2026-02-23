@@ -2,7 +2,7 @@
 require_once 'includes/config.php';
 
 // Verificar que hay jugadores registrados
-if (count($_SESSION['jugadores']) < 8) {
+if (count($_SESSION['jugadores']) < 9) {
     header('Location: jugadores.php');
     exit();
 }
@@ -18,15 +18,15 @@ $equipos_info = [
         'escudo' => 'img/equipos/real_madrid.png',
         'himno' => 'himnos/real_madrid.mp3'
     ],
-    'Barcelona' => [
+    'Serie A' => [
         'escudo' => 'img/equipos/barcelona.png',
         'himno' => 'himnos/barcelona.mp3'
     ],
-    'Bayern de Munich' => [
+    'Bayer de Munich' => [
         'escudo' => 'img/equipos/bayern_munich.png',
         'himno' => 'himnos/bayern_munich.mp3'
     ],
-    'Paris Saint-Germain' => [
+    'La liga' => [
         'escudo' => 'img/equipos/psg.png',
         'himno' => 'himnos/psg.mp3'
     ],
@@ -34,15 +34,15 @@ $equipos_info = [
         'escudo' => 'img/equipos/liverpool.png',
         'himno' => 'himnos/liverpool.mp3'
     ],
-    'Manchester City' => [
+    'Juventus' => [
         'escudo' => 'img/equipos/manchester_city.png',
         'himno' => 'himnos/manchester_city.mp3'
     ],
-    'Arsenal' => [
+    'Premier' => [
         'escudo' => 'img/equipos/arsenal.png',
         'himno' => 'himnos/arsenal.mp3'
     ],
-    'Atletico de Madrid' => [
+    'Bundesliga' => [
         'escudo' => 'img/equipos/atletico_madrid.png',
         'himno' => 'himnos/atletico.mp3'
     ],
@@ -50,10 +50,13 @@ $equipos_info = [
         'escudo' => 'img/equipos/chelsea.png',
         'himno' => 'himnos/chealsea.mp3'
     ],
-    'Inter de Milán' => [
+    'Ligue 1' => [
         'escudo' => 'img/equipos/inter_milan.png',
         'himno' => 'himnos/inter_milan.mp3'
     ],
+    
+];
+/*
     'Borussia Dormunt' => [
         'escudo' => 'img/equipos/borussia_dortmund.png',
         'himno' => 'himnos/borussia_dortmund.mp3'
@@ -61,8 +64,7 @@ $equipos_info = [
     'NewCastle' => [
         'escudo' => 'img/equipos/newcastle.png',
         'himno' => 'himnos/newcastle.mp3'
-    ]
-];
+    ]*/
 
 $equipos = array_keys($equipos_info);
 
@@ -78,7 +80,7 @@ if (isset($_POST['reiniciar_sorteo'])) {
 $equipos_disponibles = array_diff($equipos, array_column($_SESSION['asignaciones'], 'equipo'));
 
 // Si se inicia el sorteo
-if (isset($_POST['iniciar_sorteo']) && count($equipos_disponibles) > 0 && count($_SESSION['asignaciones']) < 8) {
+if (isset($_POST['iniciar_sorteo']) && count($equipos_disponibles) > 0 && count($_SESSION['asignaciones']) < 9) {
     $jugadores_sin_equipo = array_diff($_SESSION['jugadores'], array_column($_SESSION['asignaciones'], 'jugador'));
     // MEZCLAR LOS JUGADORES PARA ORDEN ALEATORIO
     shuffle($jugadores_sin_equipo);
@@ -1002,20 +1004,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="container">
         <div class="page-content">
-            <?php if (!isset($_SESSION['sorteo_actual']) && count($_SESSION['asignaciones']) < 8): ?>
+            <?php if (!isset($_SESSION['sorteo_actual']) && count($_SESSION['asignaciones']) < 9): ?>
                 <!-- Estado inicial -->
                 <div class="sorteo-inicio" style="text-align: center; padding: 60px 40px;">
                     <div class="sorteo-info">
                         <h2>¡Sorteo de Equipos!</h2>
-                        <p>Asigna aleatoriamente los equipos a los 8 jugadores</p>
+                        <p>Asigna aleatoriamente los equipos a los 9 jugadores</p>
                         <div class="estado-grid" style="max-width: 400px; margin: 30px auto;">
                             <div class="estado-item">
                                 <span>Jugadores listos:</span>
-                                <strong><?php echo count($_SESSION['jugadores']); ?> de 8</strong>
+                                <strong><?php echo count($_SESSION['jugadores']); ?> de 9</strong>
                             </div>
                             <div class="estado-item">
                                 <span>Equipos asignados:</span>
-                                <strong><?php echo count($_SESSION['asignaciones']); ?> de 8</strong>
+                                <strong><?php echo count($_SESSION['asignaciones']); ?> de 9</strong>
                             </div>
                             
                         </div>
@@ -1023,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="sorteo-acciones">
                         <form method="POST">
                             <button type="submit" name="iniciar_sorteo" class="button button-success" 
-                                    <?php echo count($_SESSION['jugadores']) < 8 ? 'disabled' : ''; ?>>
+                                    <?php echo count($_SESSION['jugadores']) < 9 ? 'disabled' : ''; ?>>
                                 🎲 Iniciar Sorteo Épico
                             </button>
                         </form>
@@ -1037,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="etapa-jugador">
                         <div class="etapa-header">
                             <h3>Jugador Actual</h3>
-                            <div class="contador"><?php echo count($_SESSION['asignaciones']) + 1; ?>/8</div>
+                            <div class="contador"><?php echo count($_SESSION['asignaciones']) + 1; ?>/9</div>
                         </div>
                         
                         <div class="jugador-destacado">
@@ -1051,20 +1053,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <div class="contador-tiempo">
                             <div class="timer">
-                                <span class="segundos">5</span> segundos
+                                <span class="segundos">10</span> segundos
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <script>
-                // Contador automático para mostrar el equipo después de 5 segundos
+                // Contador automático para mostrar el equipo después de 5 segundos (ajustable según tus necesidades)
                 setTimeout(function() {
                     document.getElementById('formMostrarEquipo').submit();
-                }, 500);
+                }, 5);
                 
                 // Animación del contador
-                let segundos = 5;
+                let segundos = 10;
                 setInterval(function() {
                     segundos--;
                     if (segundos >= 0) {
