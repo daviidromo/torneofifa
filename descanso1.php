@@ -6,6 +6,7 @@ if (!isset($_SESSION['usuario_autenticado'])) {
     header('Location: login.php');
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
