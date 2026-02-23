@@ -5,76 +5,76 @@ require_once 'includes/config.php';
 // Datos de plantillas de equipos (ACTUALIZADO CON LOS 12 EQUIPOS SOLICITADOS)
 $plantillas_equipos = [
     'Real Madrid' => [
-        'Porteros' => ['Thibaut Courtois', 'Andriy Lunin', 'Kepa Arrizabalaga'],
-        'Defensas' => ['Dani Carvajal', 'Antonio Rüdiger', 'David Alaba', 'Ferland Mendy', 'Nacho Fernández', 'Éder Militão', 'Lucas Vázquez'],
-        'Medios' => ['Jude Bellingham', 'Toni Kroos', 'Luka Modrić', 'Federico Valverde', 'Aurélien Tchouaméni', 'Eduardo Camavinga', 'Dani Ceballos'],
-        'Delanteros' => ['Vinicius Jr', 'Rodrygo', 'Joselu', 'Brahim Díaz', 'Arda Güler']
+        'Porteros' => ['Thibaut Courtois', 'Andriy Lunin', 'Gonzalez', 'Mestre'],
+        'Defensas' => ['Dani Carvajal', 'Antonio Rüdiger', 'David Alaba', 'Ferland Mendy', 'Éder Militão', 'Carreras', 'Huijsen', 'Alexander Arnold', 'Fran Garcia', 'Raul Asencio', 'Aguado', 'Fortea'],
+        'Medios' => ['Jude Bellingham', 'Federico Valverde', 'Aurélien Tchouaméni', 'Eduardo Camavinga', 'Dani Ceballos', 'Pitarch'],
+        'Delanteros' => ['Vinicius Jr', 'Rodrygo', 'Mbappe', 'Brahim Díaz', 'Arda Güler', 'Endrick', 'Gonzalo', 'Franco Mastantuono']
     ],
     'Barcelona' => [
-        'Porteros' => ['Marc-André ter Stegen', 'Iñaki Peña'],
-        'Defensas' => ['Ronald Araújo', 'Jules Koundé', 'Andreas Christensen', 'Alejandro Balde', 'João Cancelo', 'Íñigo Martínez'],
-        'Medios' => ['Pedri', 'Frenkie de Jong', 'Gavi', 'İlkay Gündoğan', 'Oriol Romeu'],
-        'Delanteros' => ['Robert Lewandowski', 'Raphinha', 'Ferran Torres', 'João Félix', 'Lamine Yamal']
+        'Porteros' => ['Wojciech Szczęsny', 'Marc-André ter Stegen', 'Diego Kochen','García'],
+        'Defensas' => ['Jules Koundé','Pau Cubarsí','Eric García','Alejandro Balde','Ronald Araujo','Andreas Christensen','Gerard Martín','Torrents'],
+        'Medios' => ['Pedri', 'Frenkie de Jong', 'Fermín López', 'Dani Olmo', 'Marc Casadó', 'Gavi', 'Marc Bernal', 'Dro', 'Fernández'],
+        'Delanteros' => ['Robert Lewandowski', 'Raphinha', 'Lamine Yamal', 'Ferran Torres', 'Marcus Rashford', 'Roony Bardghji', 'Fernández']
     ],
     'Bayern de Munich' => [
-        'Porteros' => ['Manuel Neuer', 'Sven Ulreich'],
-        'Defensas' => ['Matthijs de Ligt', 'Dayot Upamecano', 'Min-jae Kim', 'Alphonso Davies', 'Benjamin Pavard'],
-        'Medios' => ['Joshua Kimmich', 'Leon Goretzka', 'Jamal Musiala', 'Thomas Müller', 'Konrad Laimer'],
-        'Delanteros' => ['Harry Kane', 'Kingsley Coman', 'Serge Gnabry', 'Leroy Sané', 'Mathys Tel']
+        'Porteros' => ['Manuel Neuer', 'Urbig', 'Sven Ulreich', 'Klanac', 'Bärtl' ],
+        'Defensas' => ['Jonathan Tah', 'Dayot Upamecano', 'Josip Stanišić', 'Konrad Laimer', 'Kim Min Jae', 'Raphaël Guerreiro', 'Sacha Boey', 'Hiroki Ito', 'Alphonso Davies' ],
+        'Medios' => ['Joshua Kimmich', 'Aleksandar Pavlović', 'Serge Gnabry', 'Leon Goretzka', 'Tom Bischof', 'Karl', 'Jamal Musiala', 'Santos Daiber' ],
+        'Delanteros' => ['Harry Kane', 'Michael Olise', 'Luis Díaz', 'Nicolas Jackson', 'Mike' ]
     ],
     'Paris Saint-Germain' => [
-        'Porteros' => ['Gianluigi Donnarumma', 'Keylor Navas'],
-        'Defensas' => ['Marquinhos', 'Presnel Kimpembe', 'Achraf Hakimi', 'Nuno Mendes', 'Sergio Ramos'],
-        'Medios' => ['Marco Verratti', 'Danilo Pereira', 'Vitinha', 'Fabián Ruiz', 'Carlos Soler'],
-        'Delanteros' => ['Kylian Mbappé', 'Ousmane Dembélé', 'Randal Kolo Muani', 'Gonçalo Ramos']
+        'Porteros' => ['Lucas Chevalier', 'Matvey Safonov', 'Marin' ],
+        'Defensas' => ['Nuno Mendes', 'Willian Pacho', 'Marquinhos', 'Warren Zaïre-Emery', 'Lucas Hernández', 'Illia Zabarnyi', 'Lucas Beraldo', 'Kamara', 'Achraf Hakimi' ],
+        'Medios' => ['Fabián Ruiz', 'Vitinha', 'João Neves', 'Senny Mayulu', 'Jangeal' ],
+        'Delanteros' => ['Khvicha Kvaratskhelia', 'Ousmane Dembélé', 'Désiré Doué', 'Bradley Barcola', 'Ibrahim Mbaye', 'Ndjantou', 'Lee Kang-in', 'Gonçalo Ramos' ]
     ],
     'Liverpool' => [
-        'Porteros' => ['Alisson Becker', 'Caoimhín Kelleher'],
-        'Defensas' => ['Virgil van Dijk', 'Ibrahima Konaté', 'Trent Alexander-Arnold', 'Andrew Robertson', 'Joël Matip'],
-        'Medios' => ['Thiago Alcântara', 'Jordan Henderson', 'Fabinho', 'Harvey Elliott', 'Curtis Jones'],
-        'Delanteros' => ['Mohamed Salah', 'Darwin Núñez', 'Luis Díaz', 'Cody Gakpo', 'Diogo Jota']
+        'Porteros' => ['Alisson', 'Mamardashvili', 'Woodman', 'Pécsi'],
+        'Defensas' => ['van Dijk', 'Konaté', 'Kerkez', 'Bradley', 'Robertson', 'Gomez', 'Frimpong', 'Ramsay', 'Williams', 'Leoni'],
+        'Medios' => ['Mac Allister', 'Gravenberch', 'Szoboszlai', 'Wirtz', 'Jones', 'Endo', 'Bajcetic', 'Nyoni'],
+        'Delanteros' => ['Salah', 'Gakpo', 'Ekitiké', 'Isak', 'Chiesa', 'Ngumoha']
     ],
     'Manchester City' => [
-        'Porteros' => ['Ederson', 'Stefan Ortega'],
-        'Defensas' => ['Rúben Dias', 'John Stones', 'Kyle Walker', 'Nathan Aké', 'Joško Gvardiol'],
-        'Medios' => ['Kevin De Bruyne', 'Rodri', 'Bernardo Silva', 'Jack Grealish', 'Phil Foden'],
-        'Delanteros' => ['Erling Haaland', 'Julián Álvarez', 'Riyad Mahrez']
+        'Porteros' => ['Donnarumma', 'Trafford', 'Ortega', 'Bettinelli'],
+        'Defensas' => ['Gvardiol', 'Dias', 'O\'Reilly', 'Nunes', 'Stones', 'Aït-Nouri', 'Khusanov', 'Lewis', 'Aké'],
+        'Medios' => ['Rodri', 'Reijnders', 'Foden', 'Silva', 'González', 'Phillips', 'Kovačić'],
+        'Delanteros' => ['Haaland', 'Doku', 'Bobb', 'Marmoush', 'Cherki', 'Savinho']
     ],
     'Arsenal' => [
-        'Porteros' => ['David Raya', 'Aaron Ramsdale'],
-        'Defensas' => ['William Saliba', 'Gabriel Magalhães', 'Ben White', 'Oleksandr Zinchenko', 'Takehiro Tomiyasu'],
-        'Medios' => ['Martin Ødegaard', 'Declan Rice', 'Kai Havertz', 'Bukayo Saka', 'Gabriel Martinelli'],
-        'Delanteros' => ['Gabriel Jesus', 'Eddie Nketiah', 'Leandro Trossard']
+        'Porteros' => ['Raya', 'Kepa'],
+        'Defensas' => ['Gabriel', 'Saliba', 'Timber', 'Calafiori', 'White', 'Hincapié', 'Lewis-Skelly', 'Mosquera'],
+        'Medios' => ['Rice', 'Zubimendi', 'Eze', 'Ødegaard', 'Merino', 'Nørgaard'],
+        'Delanteros' => ['Gyökeres', 'Saka', 'Trossard', 'Havertz', 'Jesus', 'Martinelli', 'Madueke', 'Nwaneri']
     ],
     'Atletico de Madrid' => [
-        'Porteros' => ['Jan Oblak', 'Ivo Grbić'],
-        'Defensas' => ['José María Giménez', 'Stefan Savić', 'Mario Hermoso', 'Nahuel Molina', 'Reinildo Mandava'],
-        'Medios' => ['Koke', 'Marcos Llorente', 'Rodrigo De Paul', 'Thomas Lemar', 'Saúl Ñíguez'],
-        'Delanteros' => ['Antoine Griezmann', 'Álvaro Morata', 'Memphis Depay', 'Yannick Carrasco']
+        'Porteros' => ['Oblak', 'Musso', 'Esquivel'],
+        'Defensas' => ['Hancko', 'Giménez', 'Le Normand', 'Llorente', 'Lenglet', 'Ruggeri', 'Molina', 'Galán', 'Pubill', 'Kostis'],
+        'Medios' => ['Koke', 'Barrios', 'Baena', 'Simeone', 'Cardoso', 'Gonzalez', 'Almada', 'Gallagher'],
+        'Delanteros' => ['Alvarez', 'Sørloth', 'Griezmann', 'Raspadori', 'Martín']
     ],
     'Chealsea' => [
-        'Porteros' => ['Robert Sánchez', 'Đorđe Petrović'],
-        'Defensas' => ['Thiago Silva', 'Benoît Badiashile', 'Reece James', 'Levi Colwill', 'Malo Gusto'],
-        'Medios' => ['Enzo Fernández', 'Moisés Caicedo', 'Conor Gallagher', 'Cole Palmer', 'Raheem Sterling'],
-        'Delanteros' => ['Nicolas Jackson', 'Christopher Nkunku', 'Mykhailo Mudryk']
+        'Porteros' => ['Sánchez', 'Jörgensen', 'Slonina'],
+        'Defensas' => ['Cucurella', 'Adarabioyo', 'Chalobah', 'James', 'Fofana', 'Gusto', 'Hato', 'Acheampong', 'Badiashile', 'Colwill', 'Disasi'],
+        'Medios' => ['Fernández', 'Caicedo', 'Palmer', 'Santos', 'Lavia', 'Buonanotte', 'Essugo'],
+        'Delanteros' => ['João Pedro', 'Garnacho', 'Neto', 'Estêvão', 'Gittens', 'Delap', 'Guiu', 'George', 'Sterling']
     ],
     'Inter de Milán' => [
-        'Porteros' => ['Yann Sommer', 'Emil Audero'],
-        'Defensas' => ['Francesco Acerbi', 'Alessandro Bastoni', 'Benjamin Pavard', 'Matteo Darmian', 'Stefan de Vrij'],
-        'Medios' => ['Nicolò Barella', 'Hakan Çalhanoğlu', 'Henrikh Mkhitaryan', 'Davide Frattesi', 'Federico Dimarco'],
-        'Delanteros' => ['Lautaro Martínez', 'Marcus Thuram', 'Marko Arnautović']
+        'Porteros' => ['Sommer', 'Martínez', 'Di Gennaro'],
+        'Defensas' => ['Bastoni', 'Acerbi', 'Akanji', 'Dimarco', 'Dumfries', 'Carlos Augusto', 'Bisseck', 'de Vrij', 'Palacios', 'Darmian'],
+        'Medios' => ['Mkhitaryan', 'Çalhanoğlu', 'Barella', 'Zieliński', 'Luis Henrique', 'Sučić', 'Frattesi', 'Diouf'],
+        'Delanteros' => ['Martínez', 'Thuram', 'Bonny', 'Esposito']
     ],
     'Borussia Dormunt' => [
-        'Porteros' => ['Gregor Kobel', 'Alexander Meyer'],
-        'Defensas' => ['Mats Hummels', 'Nico Schlotterbeck', 'Niklas Süle', 'Ramy Bensebaini', 'Thomas Meunier'],
-        'Medios' => ['Jude Bellingham', 'Marco Reus', 'Julian Brandt', 'Giovanni Reyna', 'Salih Özcan'],
-        'Delanteros' => ['Youssoufa Moukoko', 'Karim Adeyemi', 'Donyell Malen']
+        'Porteros' => ['Kobel', 'Meyer', 'Ostrzinski', 'Drewes'],
+        'Defensas' => ['Schlotterbeck', 'Anton', 'Anselmino', 'Bensebaini', 'Couto', 'Can', 'Mane', 'Süle', 'Kabar'],
+        'Medios' => ['Nmecha', 'Sabitzer', 'Ryerson', 'Brandt', 'Svensson', 'Chukwuemeka', 'Bellingham', 'Groß', 'Özcan', 'Duranville', 'Campbell'],
+        'Delanteros' => ['Guirassy', 'Adeyemi', 'Silva', 'Beier']
     ],
     'NewCastle' => [
-        'Porteros' => ['Nick Pope', 'Martin Dúbravka'],
-        'Defensas' => ['Kieran Trippier', 'Sven Botman', 'Fabian Schär', 'Dan Burn', 'Jamaal Lascelles'],
-        'Medios' => ['Bruno Guimarães', 'Sean Longstaff', 'Joelinton', 'Joe Willock', 'Miguel Almirón'],
-        'Delanteros' => ['Alexander Isak', 'Callum Wilson', 'Anthony Gordon', 'Harvey Barnes']
+        'Porteros' => ['Pope', 'Ramsdale', 'Ruddy', 'Gillespie', 'Thompson'],
+        'Defensas' => ['Burn', 'Botman', 'Thiaw', 'Trippier', 'Schär', 'Livramento', 'Krafth', 'Lascelles', 'Hall', 'Murphy (LI)', 'Ashby'],
+        'Medios' => ['Joelinton', 'Tonali', 'Guimarães', 'Willock', 'Miley'],
+        'Delanteros' => ['Gordon', 'Woltemade', 'Murphy (ED)', 'Barnes', 'Elanga', 'Osula', 'Ramsey', 'Wissa']
     ]
 ];
 

@@ -75,68 +75,57 @@ function obtenerJugadorPorEquipo($equipo) {
     return null;
 }
 
-// Función para obtener todos los partidos jugados
+function buscarPartidosEnEstructura($estructura) {
+    $partidosEncontrados = [];
+    
+    if (is_array($estructura)) {
+        foreach ($estructura as $valor) {
+            if (is_array($valor)) {
+                // Un partido debe tener local y visitante definidos
+                if (isset($valor['local']) && isset($valor['visitante'])) {
+                    // Verificamos si realmente se ha jugado (marcado como jugado o tiene goles)
+                    $tieneGoles = (isset($valor['goles_local']) && $valor['goles_local'] !== '') || 
+                                  (isset($valor['goles_visitante']) && $valor['goles_visitante'] !== '');
+                    $jugado = isset($valor['jugado']) && $valor['jugado'];
+                    
+                    if ($jugado || $tieneGoles) {
+                        $partidosEncontrados[] = $valor;
+                    }
+                } else {
+                    // Si no es un partido, seguimos buscando en profundidad
+                    $partidosEncontrados = array_merge($partidosEncontrados, buscarPartidosEnEstructura($valor));
+                }
+            }
+        }
+    }
+    return $partidosEncontrados;
+}
+// 2. SEGUNDO: Corregimos la función principal para que use la de arriba.
+// Función para obtener todos los partidos jugados (CORREGIDA)
 function obtenerPartidosJugados() {
     $partidos = [];
 
     // Partidos de grupos
     if (isset($_SESSION['grupos_sorteados'])) {
         foreach (['grupo_a', 'grupo_b'] as $grupo) {
-            foreach ($_SESSION['grupos_sorteados'][$grupo]['calendario'] as $jornada) {
-                foreach ($jornada as $partido) {
-                    if ($partido['jugado']) {
-                        $partidos[] = $partido;
+            if (isset($_SESSION['grupos_sorteados'][$grupo]['calendario'])) {
+                foreach ($_SESSION['grupos_sorteados'][$grupo]['calendario'] as $jornada) {
+                    foreach ($jornada as $partido) {
+                        if (isset($partido['jugado']) && $partido['jugado']) {
+                            $partidos[] = $partido;
+                        }
                     }
                 }
             }
         }
     }
 
-    // Partidos de eliminatorias (NUEVA ESTRUCTURA DE DOBLE ELIMINACIÓN)
+    // Partidos de eliminatorias
     if (isset($_SESSION['eliminatorias'])) {
         $eliminatorias = $_SESSION['eliminatorias'];
-        
-        // Winner Bracket
-        $wb = $eliminatorias['winner_bracket'];
-        foreach (['cuartos', 'semifinales', 'final'] as $ronda) {
-            if (isset($wb[$ronda])) {
-                foreach ($wb[$ronda] as $partido) {
-                    if ($partido['jugado']) {
-                        $partidos[] = $partido;
-                    }
-                }
-            }
-        }
-        
-        // Loser Bracket
-        $lb = $eliminatorias['loser_bracket'];
-        foreach (['ronda1', 'ronda2', 'ronda3', 'final'] as $ronda) {
-            if (isset($lb[$ronda])) {
-                foreach ($lb[$ronda] as $partido) {
-                    if ($partido['jugado']) {
-                        $partidos[] = $partido;
-                    }
-                }
-            }
-        }
-        
-        // Gran Final
-        if (isset($eliminatorias['gran_final'])) {
-            foreach ($eliminatorias['gran_final'] as $partido) {
-                if ($partido['jugado']) {
-                    $partidos[] = $partido;
-                }
-            }
-        }
-        
-        // True Final (si existe)
-        if (isset($eliminatorias['true_final'])) {
-            foreach ($eliminatorias['true_final'] as $partido) {
-                if ($partido['jugado']) {
-                    $partidos[] = $partido;
-                }
-            }
-        }
+        // Ahora simplemente llamamos a la función externa sin redefinirla
+        $partidosEliminatorias = buscarPartidosEnEstructura($eliminatorias);
+        $partidos = array_merge($partidos, $partidosEliminatorias);
     }
 
     return $partidos;
@@ -531,6 +520,55 @@ function calcularGuanteDeOro($estadisticasJugadores) {
     return $porterosStats;
 }
 
+// Función para obtener todos los partidos jugados (ACTUALIZADA)
+// ... (asegúrate de pegar esto sustituyendo solo la función calcularTopValoraciones) ...
+
+function calcularTopValoraciones() {
+    $partidos = obtenerPartidosJugados();
+    $valoraciones = [];
+    
+    foreach ($partidos as $partido) {
+       $mapeo = [
+            ['jugador' => 'local_jugador1', 'valor' => 'local_valoracion1', 'equipo' => 'local'],
+            ['jugador' => 'local_jugador2', 'valor' => 'local_valoracion2', 'equipo' => 'local'],
+            ['jugador' => 'visitante_jugador1', 'valor' => 'visitante_valoracion1', 'equipo' => 'visitante'],
+            ['jugador' => 'visitante_jugador2', 'valor' => 'visitante_valoracion2', 'equipo' => 'visitante']
+        ];
+
+        foreach ($mapeo as $m) {
+            if (!empty($partido[$m['jugador']]) && isset($partido[$m['valor']]) && $partido[$m['valor']] !== '') {
+                $nombreOriginal = trim($partido[$m['jugador']]);
+                $nombreKey = mb_strtoupper($nombreOriginal); 
+                $valor = floatval($partido[$m['valor']]);
+
+                if (!isset($valoraciones[$nombreKey])) {
+                    $valoraciones[$nombreKey] = [
+                        'nombre_display' => $nombreOriginal,
+                        'total' => 0,
+                        'veces' => 0,
+                        'equipo' => $partido[$m['equipo']] ?? 'Desconocido'
+                    ];
+                }
+                
+                // Sumamos la valoración al total acumulado
+                $valoraciones[$nombreKey]['total'] += $valor;
+                $valoraciones[$nombreKey]['veces']++;
+            }
+        }
+    }
+    
+    // Ordenamos por el TOTAL acumulado más alto (de mayor a menor)
+    uasort($valoraciones, function($a, $b) {
+        if ($a['total'] == $b['total']) {
+            // En caso de empate en puntos, el que tenga más partidos jugados va primero
+            return $b['veces'] - $a['veces'];
+        }
+        return ($a['total'] < $b['total']) ? 1 : -1;
+    });
+    
+    return array_slice($valoraciones, 0, 10, true);
+}
+
 // Procesar formulario de Balón de Oro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_balon_oro'])) {
     $votante = trim($_POST['votante_balon_oro'] ?? '');
@@ -610,6 +648,7 @@ $botaDeOro = calcularBotaDeOro();
 $mayorAsistente = calcularMayorAsistente();
 $guanteDeOro = calcularGuanteDeOro($estadisticasJugadores);
 $ganadorGuanteOro = !empty($guanteDeOro) ? $guanteDeOro[0] : null;
+$topValoraciones = calcularTopValoraciones(); // NUEVO: Calcular top 10 valoraciones
 
 // Si se ha hecho clic en un jugador, mostramos sus detalles
 $jugadorSeleccionado = null;
@@ -640,6 +679,7 @@ if (isset($_GET['jugador']) && array_key_exists($_GET['jugador'], $estadisticasJ
             --bronze-color: #cd7f32;
             --puskas-color: #8B4513;
             --guante-color: #1e90ff;
+            --valoracion-color: #FF69B4;
             --text-color: #ffffff;
             --text-secondary: #b0b0b0;
             --border-radius: 12px;
@@ -649,6 +689,7 @@ if (isset($_GET['jugador']) && array_key_exists($_GET['jugador'], $estadisticasJ
             --gradient-accent: linear-gradient(135deg, #e94560, #ff6b6b, #ff8e8e);
             --gradient-gold: linear-gradient(135deg, #ffd700, #ffa500, #ff8c00);
             --gradient-guante: linear-gradient(135deg, #1e90ff, #4169e1, #0000ff);
+            --gradient-valoracion: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
         }
 
         * {
@@ -1635,6 +1676,114 @@ if (isset($_GET['jugador']) && array_key_exists($_GET['jugador'], $estadisticasJ
             padding: 10px;
         }
 
+        /* ===== SECCIÓN ACTUALIZADA: TOP 10 VALORACIONES (Más grandes y legibles) ===== */
+        .top-valoraciones-section {
+            margin-bottom: 60px;
+        }
+
+        .top-valoraciones-section h3 {
+            font-size: 2.2rem; /* Título más grande */
+            margin-bottom: 35px;
+            text-align: center;
+            color: var(--valoracion-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .top-valoraciones-container {
+            background: rgba(255, 105, 180, 0.1);
+            border-radius: var(--border-radius);
+            padding: 40px; /* Más padding en el contenedor */
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+
+        .top-valoraciones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Cajas más anchas */
+            gap: 30px; /* Más espacio entre cajas */
+        }
+
+        .top-valoracion-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius);
+            padding: 35px 25px; /* Cajas mucho más altas y espaciosas */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            min-height: 150px; /* Altura mínima garantizada */
+        }
+
+        .posicion-valoracion {
+            font-size: 2.8rem; /* Icono de medalla más grande */
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .jugador-valoracion {
+            flex-grow: 1;
+            min-width: 0; /* Permite que el nombre use break-word correctamente */
+        }
+
+        .nombre-jugador-valoracion {
+            font-size: 1.6rem; /* Nombre más grande y visible */
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            line-height: 1.2;
+            word-wrap: break-word; /* Ajuste para nombres largos */
+            overflow-wrap: break-word;
+        }
+
+        .equipo-jugador-valoracion {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .estadisticas-valoracion {
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .valoracion-numero {
+            font-size: 2.5rem; /* Puntuación más destacada */
+            font-weight: bold;
+            color: var(--valoracion-color);
+            line-height: 1;
+        }
+
+        .valoracion-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Ajuste responsive para móviles */
+        @media (max-width: 768px) {
+            .top-valoraciones-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-valoracion-card {
+                padding: 25px;
+                flex-direction: row; /* Mantenemos horizontal si cabe */
+                text-align: left;
+            }
+
+            .nombre-jugador-valoracion {
+                font-size: 1.4rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .records-grid {
                 grid-template-columns: 1fr;
@@ -1981,6 +2130,65 @@ if (isset($_GET['jugador']) && array_key_exists($_GET['jugador'], $estadisticasJ
                             No hay suficientes datos para determinar el Guante de Oro.
                             <div style="margin-top: 15px; font-size: 0.9rem;">
                                 Se necesitan partidos jugados para calcular esta estadística.
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: Top 10 Valoraciones -->
+            <div class="top-valoraciones-section">
+                <h3>
+                    <span class="trofeo-valoraciones">⭐</span>
+                    Top 10 - Mejores Valoraciones
+                </h3>
+                
+                <div class="top-valoraciones-container">
+                    <?php if (!empty($topValoraciones)): ?>
+                        <div class="top-valoraciones-grid">
+                            <?php 
+                            $posicion = 1;
+                            foreach ($topValoraciones as $jugador => $datos): 
+                                $colorPosicion = '';
+                                if ($posicion === 1) $colorPosicion = 'gold';
+                                elseif ($posicion === 2) $colorPosicion = 'silver';
+                                elseif ($posicion === 3) $colorPosicion = 'bronze';
+                            ?>
+                                <div class="top-valoracion-card">
+                                    <div class="posicion-valoracion" style="color: var(--<?php echo $colorPosicion; ?>-color);">
+                                        <?php 
+                                        if ($posicion === 1) echo '🥇';
+                                        elseif ($posicion === 2) echo '🥈';
+                                        elseif ($posicion === 3) echo '🥉';
+                                        else echo $posicion . 'º';
+                                        ?>
+                                    </div>
+                                    <div class="jugador-valoracion">
+                                        <div class="nombre-jugador-valoracion"><?php echo htmlspecialchars($jugador); ?></div>
+                                        <div class="equipo-jugador-valoracion">
+                                            <?php echo htmlspecialchars($datos['equipo'] ?? 'Sin equipo'); ?>
+                                        </div>
+                                    </div>
+                                    <div class="estadisticas-valoracion">
+                                        <div class="valoracion-promedio">
+                                            <div class="valoracion-numero"><?php echo number_format($datos['total'], 1); ?></div>
+                                            <div class="valoracion-label">Puntos Totales</div>
+                                        </div>
+                                        <div class="detalles-valoracion">
+                                            <div class="valoracion-veces"><?php echo $datos['veces']; ?> partido(s) jugados</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php 
+                            $posicion++;
+                            endforeach; 
+                            ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="sin-valoraciones">
+                            No hay valoraciones registradas todavía.
+                            <div style="margin-top: 15px; font-size: 0.9rem;">
+                                Las valoraciones se registran al introducir resultados en los partidos.
                             </div>
                         </div>
                     <?php endif; ?>

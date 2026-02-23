@@ -136,6 +136,13 @@ header h1::after {
     gap: 25px;
 }
 
+/* Ajuste para pantallas grandes: 3 columnas */
+@media (min-width: 1200px) {
+    .menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 .menu-item, .bracket-item {
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius);
@@ -151,6 +158,61 @@ header h1::after {
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
+}
+
+/* Elemento de sponsors - ocupa 3 columnas */
+.sponsor-item {
+    grid-column: span 3;
+    background: rgba(255, 215, 0, 0.08);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    padding: 40px 30px;
+    position: relative;
+}
+
+.sponsor-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+        transparent 0%, 
+        rgba(255, 215, 0, 0.1) 25%, 
+        rgba(255, 215, 0, 0.05) 50%, 
+        rgba(255, 215, 0, 0.1) 75%, 
+        transparent 100%);
+    z-index: -1;
+}
+
+.sponsor-item .menu-icon {
+    color: var(--gold-color);
+    font-size: 4rem;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.sponsor-item h3 {
+    font-size: 2rem;
+    background: linear-gradient(to right, var(--gold-color), #ffed4e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 15px;
+}
+
+.sponsor-item p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sponsor-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.5);
+    background: rgba(255, 215, 0, 0.12);
 }
 
 .menu-item::before, .bracket-item::before {
@@ -334,14 +396,36 @@ header h1::after {
     }
 }
 
+@keyframes sponsorGlow {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+}
+
 header, .menu-item, .bracket-item, .estado-item, .boton-descanso {
     animation: fadeInUp 0.6s ease forwards;
+}
+
+.sponsor-item {
+    animation: fadeInUp 0.8s ease forwards, sponsorGlow 3s infinite;
 }
 
 .menu-item:nth-child(1) { animation-delay: 0.1s; }
 .menu-item:nth-child(2) { animation-delay: 0.2s; }
 .menu-item:nth-child(3) { animation-delay: 0.3s; }
 .menu-item:nth-child(4) { animation-delay: 0.4s; }
+.menu-item:nth-child(5) { animation-delay: 0.5s; }
+.menu-item:nth-child(6) { animation-delay: 0.6s; }
+.menu-item:nth-child(7) { animation-delay: 0.1s; }
+.menu-item:nth-child(8) { animation-delay: 0.2s; }
+.menu-item:nth-child(9) { animation-delay: 0.3s; }
+.sponsor-item { animation-delay: 0.4s; }
 .bracket-item:nth-child(1) { animation-delay: 0.5s; }
 .bracket-item:nth-child(2) { animation-delay: 0.6s; }
 .boton-descanso:nth-child(1) { animation-delay: 0.7s; }
@@ -352,7 +436,17 @@ header, .menu-item, .bracket-item, .estado-item, .boton-descanso {
     animation: pulse 1s infinite;
 }
 
+.sponsor-item:hover .menu-icon {
+    animation: pulse 0.8s infinite;
+}
+
 /* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .sponsor-item {
+        grid-column: span 2;
+    }
+}
+
 @media (max-width: 1024px) {
     .menu-grid {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -360,6 +454,10 @@ header, .menu-item, .bracket-item, .estado-item, .boton-descanso {
     
     .bracket-item {
         grid-column: span 1;
+    }
+    
+    .sponsor-item {
+        grid-column: span 2;
     }
 }
 
@@ -374,6 +472,23 @@ header, .menu-item, .bracket-item, .estado-item, .boton-descanso {
     
     .menu-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .sponsor-item,
+    .bracket-item {
+        grid-column: span 1;
+    }
+    
+    .sponsor-item {
+        padding: 30px 20px;
+    }
+    
+    .sponsor-item .menu-icon {
+        font-size: 3rem;
+    }
+    
+    .sponsor-item h3 {
+        font-size: 1.8rem;
     }
     
     .estado-grid {
@@ -402,8 +517,24 @@ header, .menu-item, .bracket-item, .estado-item, .boton-descanso {
         padding: 20px 15px;
     }
     
+    .sponsor-item {
+        padding: 25px 15px;
+    }
+    
     .menu-icon, .bracket-icon {
         font-size: 2.5rem;
+    }
+    
+    .sponsor-item .menu-icon {
+        font-size: 2.5rem;
+    }
+    
+    .sponsor-item h3 {
+        font-size: 1.5rem;
+    }
+    
+    .sponsor-item p {
+        font-size: 1rem;
     }
     
     .boton-descanso {
@@ -427,17 +558,18 @@ body::before {
     background-size: 50px 50px, 70px 70px, 90px 90px;
     z-index: -1;
 }
+
 /* Estilo para el video grupal */
 .foto-grupal {
-    max-width: 100%; /* Asegura que no se desborde */
-    width: 600px; /* Ancho máximo para el desktop */
+    max-width: 100%;
+    width: 600px;
     height: auto;
     margin-top: 30px;
-    border-radius: var(--border-radius); /* Bordes redondeados */
-    border: 5px solid var(--highlight-color); /* Borde de color de realce */
-    box-shadow: var(--box-shadow); /* Sombra para profundidad */
+    border-radius: var(--border-radius);
+    border: 5px solid var(--highlight-color);
+    box-shadow: var(--box-shadow);
     object-fit: cover;
-    animation: fadeInUp 0.8s ease forwards; /* Aplica la animación ya definida */
+    animation: fadeInUp 0.8s ease forwards;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -446,11 +578,10 @@ body::before {
 /* Ajuste responsive para el video */
 @media (max-width: 768px) {
     .foto-grupal {
-        width: 100%; /* Ocupa todo el ancho en móviles */
+        width: 100%;
         margin-top: 20px;
         border-width: 3px;
     }
-
 }
 </style>
     <!-- Iconos de Font Awesome -->
@@ -493,15 +624,43 @@ body::before {
                     <h3>Grupos</h3>
                     <p>Sorteo y calendario</p>
                 </a>
+                
                 <a href="eliminatorias.php" class="menu-item">
                     <div class="menu-icon">🏅</div>
                     <h3>Cuadro de Eliminatorias</h3>
                     <p>Ver bracket completo y resultados</p>
                 </a>
+                
                 <a href="estadisticas.php" class="menu-item">
                     <div class="menu-icon">🏆</div>
                     <h3>Estadísticas y Records</h3>
                     <p>Máximos goleadores, mejores jugadores y records</p>
+                </a>
+                
+                <!-- NUEVAS SECCIONES AÑADIDAS -->
+                <a href="login.php" class="menu-item">
+                    <div class="menu-icon">🔐</div>
+                    <h3>Iniciar Sesión</h3>
+                    <p>Acceso administradores y jugadores</p>
+                </a>
+                
+                <a href="comentaristas.php" class="menu-item">
+                    <div class="menu-icon">🎤</div>
+                    <h3>Comentaristas</h3>
+                    <p>Panel de comentarios y narradores</p>
+                </a>
+                
+                <a href="sonidos.php" class="menu-item">
+                    <div class="menu-icon">🔊</div>
+                    <h3>Banco de Sonidos</h3>
+                    <p>SIUUU, abucheos, animación y efectos</p>
+                </a>
+                
+                <!-- SPONSORS - OCUPA 3 COLUMNAS -->
+                <a href="sponsors.php" class="menu-item sponsor-item">
+                    <div class="menu-icon">💼</div>
+                    <h3>Sponsors y Patrocinadores</h3>
+                    <p>Conoce a nuestros patrocinadores oficiales que hacen posible este torneo</p>
                 </a>
             </div>
         </div>

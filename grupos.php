@@ -1,6 +1,124 @@
 <?php
 require_once 'includes/config.php';
 
+// Definir plantillas de equipos con jugadores (CORREGIDOS LOS NOMBRES)
+$plantillas_equipos = [
+    'Real Madrid' => [
+        'Porteros' => ['Thibaut Courtois', 'Andriy Lunin', 'Gonzalez', 'Mestre'],
+        'Defensas' => ['Dani Carvajal', 'Antonio Rüdiger', 'David Alaba', 'Ferland Mendy', 'Éder Militão', 'Carreras', 'Huijsen', 'Alexander Arnold', 'Fran Garcia', 'Raul Asencio', 'Aguado', 'Fortea'],
+        'Medios' => ['Jude Bellingham', 'Federico Valverde', 'Aurélien Tchouaméni', 'Eduardo Camavinga', 'Dani Ceballos', 'Pitarch'],
+        'Delanteros' => ['Vinicius Jr', 'Rodrygo', 'Mbappe', 'Brahim Díaz', 'Arda Güler', 'Endrick', 'Gonzalo', 'Franco Mastantuono']
+    ],
+    'Barcelona' => [
+        'Porteros' => ['Wojciech Szczęsny', 'Marc-André ter Stegen', 'Diego Kochen','García'],
+        'Defensas' => ['Jules Koundé','Pau Cubarsí','Eric García','Alejandro Balde','Ronald Araujo','Andreas Christensen','Gerard Martín','Torrents'],
+        'Medios' => ['Pedri', 'Frenkie de Jong', 'Fermín López', 'Dani Olmo', 'Marc Casadó', 'Gavi', 'Marc Bernal', 'Dro', 'Fernández'],
+        'Delanteros' => ['Robert Lewandowski', 'Raphinha', 'Lamine Yamal', 'Ferran Torres', 'Marcus Rashford', 'Roony Bardghji', 'Fernández']
+    ],
+    'Bayern Munich' => [ // CORREGIDO: "Bayern de Múnich" -> "Bayern Múnich"
+        'Porteros' => ['Manuel Neuer', 'Urbig', 'Sven Ulreich', 'Klanac', 'Bärtl' ],
+        'Defensas' => ['Jonathan Tah', 'Dayot Upamecano', 'Josip Stanišić', 'Konrad Laimer', 'Kim Min Jae', 'Raphaël Guerreiro', 'Sacha Boey', 'Hiroki Ito', 'Alphonso Davies' ],
+        'Medios' => ['Joshua Kimmich', 'Aleksandar Pavlović', 'Serge Gnabry', 'Leon Goretzka', 'Tom Bischof', 'Karl', 'Jamal Musiala', 'Santos Daiber' ],
+        'Delanteros' => ['Harry Kane', 'Michael Olise', 'Luis Díaz', 'Nicolas Jackson', 'Mike' ]
+    ],
+    'Paris Saint-Germain' => [
+        'Porteros' => ['Lucas Chevalier', 'Matvey Safonov', 'Marin' ],
+        'Defensas' => ['Nuno Mendes', 'Willian Pacho', 'Marquinhos', 'Warren Zaïre-Emery', 'Lucas Hernández', 'Illia Zabarnyi', 'Lucas Beraldo', 'Kamara', 'Achraf Hakimi' ],
+        'Medios' => ['Fabián Ruiz', 'Vitinha', 'João Neves', 'Senny Mayulu', 'Jangeal' ],
+        'Delanteros' => ['Khvicha Kvaratskhelia', 'Ousmane Dembélé', 'Désiré Doué', 'Bradley Barcola', 'Ibrahim Mbaye', 'Ndjantou', 'Lee Kang-in', 'Gonçalo Ramos' ]
+    ],
+    'Liverpool' => [
+        'Porteros' => ['Alisson', 'Mamardashvili', 'Woodman', 'Pécsi'],
+        'Defensas' => ['van Dijk', 'Konaté', 'Kerkez', 'Bradley', 'Robertson', 'Gomez', 'Frimpong', 'Ramsay', 'Williams', 'Leoni'],
+        'Medios' => ['Mac Allister', 'Gravenberch', 'Szoboszlai', 'Wirtz', 'Jones', 'Endo', 'Bajcetic', 'Nyoni'],
+        'Delanteros' => ['Salah', 'Gakpo', 'Ekitiké', 'Isak', 'Chiesa', 'Ngumoha']
+    ],
+    'Manchester City' => [
+        'Porteros' => ['Donnarumma', 'Trafford', 'Ortega', 'Bettinelli'],
+        'Defensas' => ['Gvardiol', 'Dias', 'O\'Reilly', 'Nunes', 'Stones', 'Aït-Nouri', 'Khusanov', 'Lewis', 'Aké'],
+        'Medios' => ['Rodri', 'Reijnders', 'Foden', 'Silva', 'González', 'Phillips', 'Kovačić'],
+        'Delanteros' => ['Haaland', 'Doku', 'Bobb', 'Marmoush', 'Cherki', 'Savinho']
+    ],
+    'Arsenal' => [
+        'Porteros' => ['Raya', 'Kepa'],
+        'Defensas' => ['Gabriel', 'Saliba', 'Timber', 'Calafiori', 'White', 'Hincapié', 'Lewis-Skelly', 'Mosquera'],
+        'Medios' => ['Rice', 'Zubimendi', 'Eze', 'Ødegaard', 'Merino', 'Nørgaard'],
+        'Delanteros' => ['Gyökeres', 'Saka', 'Trossard', 'Havertz', 'Jesus', 'Martinelli', 'Madueke', 'Nwaneri']
+    ],
+    'Atlético de Madrid' => [
+        'Porteros' => ['Oblak', 'Musso', 'Esquivel'],
+        'Defensas' => ['Hancko', 'Giménez', 'Le Normand', 'Llorente', 'Lenglet', 'Ruggeri', 'Molina', 'Galán', 'Pubill', 'Kostis'],
+        'Medios' => ['Koke', 'Barrios', 'Baena', 'Simeone', 'Cardoso', 'Gonzalez', 'Almada', 'Gallagher'],
+        'Delanteros' => ['Alvarez', 'Sørloth', 'Griezmann', 'Raspadori', 'Martín']
+    ],
+    'Chelsea' => [ // CORREGIDO: "Chealsea" -> "Chelsea"
+        'Porteros' => ['Sánchez', 'Jörgensen', 'Slonina'],
+        'Defensas' => ['Cucurella', 'Adarabioyo', 'Chalobah', 'James', 'Fofana', 'Gusto', 'Hato', 'Acheampong', 'Badiashile', 'Colwill', 'Disasi'],
+        'Medios' => ['Fernández', 'Caicedo', 'Palmer', 'Santos', 'Lavia', 'Buonanotte', 'Essugo'],
+        'Delanteros' => ['João Pedro', 'Garnacho', 'Neto', 'Estêvão', 'Gittens', 'Delap', 'Guiu', 'George', 'Sterling']
+    ],
+    'Inter de Milán' => [
+        'Porteros' => ['Sommer', 'Martínez', 'Di Gennaro'],
+        'Defensas' => ['Bastoni', 'Acerbi', 'Akanji', 'Dimarco', 'Dumfries', 'Carlos Augusto', 'Bisseck', 'de Vrij', 'Palacios', 'Darmian'],
+        'Medios' => ['Mkhitaryan', 'Çalhanoğlu', 'Barella', 'Zieliński', 'Luis Henrique', 'Sučić', 'Frattesi', 'Diouf'],
+        'Delanteros' => ['Martínez', 'Thuram', 'Bonny', 'Esposito']
+    ],
+    'Borussia Dortmund' => [ // CORREGIDO: "Borussia Dormunt" -> "Borussia Dortmund"
+        'Porteros' => ['Kobel', 'Meyer', 'Ostrzinski', 'Drewes'],
+        'Defensas' => ['Schlotterbeck', 'Anton', 'Anselmino', 'Bensebaini', 'Couto', 'Can', 'Mane', 'Süle', 'Kabar'],
+        'Medios' => ['Nmecha', 'Sabitzer', 'Ryerson', 'Brandt', 'Svensson', 'Chukwuemeka', 'Bellingham', 'Groß', 'Özcan', 'Duranville', 'Campbell'],
+        'Delanteros' => ['Guirassy', 'Adeyemi', 'Silva', 'Beier']
+    ],
+    'Newcastle' => [ // CORREGIDO: "NewCastle" -> "Newcastle"
+        'Porteros' => ['Pope', 'Ramsdale', 'Ruddy', 'Gillespie', 'Thompson'],
+        'Defensas' => ['Burn', 'Botman', 'Thiaw', 'Trippier', 'Schär', 'Livramento', 'Krafth', 'Lascelles', 'Hall', 'Murphy (LI)', 'Ashby'],
+        'Medios' => ['Joelinton', 'Tonali', 'Guimarães', 'Willock', 'Miley'],
+        'Delanteros' => ['Gordon', 'Woltemade', 'Murphy (ED)', 'Barnes', 'Elanga', 'Osula', 'Ramsey', 'Wissa']
+    ]
+];
+
+// Función para obtener todos los jugadores de un equipo con mejor manejo de errores
+function obtenerJugadoresEquipo($equipo, $plantillas_equipos) {
+    // Mapeo de nombres alternativos
+    $mapeo_nombres = [
+        'Bayern de Munich' => 'Bayern Munich',
+        'Borussia Dormunt' => 'Borussia Dortmund',
+        'NewCastle' => 'Newcastle',
+        'Chealsea' => 'Chelsea',
+        'Atletico de Madrid' => 'Atlético de Madrid'
+    ];
+    
+    // Verificar si el nombre necesita ser mapeado
+    if (isset($mapeo_nombres[$equipo])) {
+        $equipo = $mapeo_nombres[$equipo];
+    }
+    
+    if (isset($plantillas_equipos[$equipo])) {
+        $jugadores = [];
+        foreach ($plantillas_equipos[$equipo] as $posicion => $jugadores_posicion) {
+            $jugadores = array_merge($jugadores, $jugadores_posicion);
+        }
+        return $jugadores;
+    }
+    
+    // Si no se encuentra, buscar variaciones
+    foreach ($plantillas_equipos as $nombre_equipo => $plantilla) {
+        // Comparación insensible a mayúsculas y sin tildes
+        $nombre1 = strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $equipo));
+        $nombre2 = strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $nombre_equipo));
+        
+        if ($nombre1 === $nombre2) {
+            $jugadores = [];
+            foreach ($plantilla as $posicion => $jugadores_posicion) {
+                $jugadores = array_merge($jugadores, $jugadores_posicion);
+            }
+            return $jugadores;
+        }
+    }
+    
+    return [];
+}
+
 // Verificar que hay equipos asignados
 if (count($_SESSION['asignaciones']) < 8) {
     header('Location: sorteo.php');
@@ -40,7 +158,16 @@ function generarCalendarioEquilibrado($equipos_grupo) {
                         'tarjetas_rojas_local' => 0,
                         'tarjetas_rojas_visitante' => 0,
                         'tarjetas_amarillas_local' => 0,
-                        'tarjetas_amarillas_visitante' => 0
+                        'tarjetas_amarillas_visitante' => 0,
+                        // Nuevos campos para jugadores y valoraciones
+                        'local_jugador1' => null,
+                        'local_valoracion1' => null,
+                        'local_jugador2' => null,
+                        'local_valoracion2' => null,
+                        'visitante_jugador1' => null,
+                        'visitante_valoracion1' => null,
+                        'visitante_jugador2' => null,
+                        'visitante_valoracion2' => null
                     ];
                 } else {
                     $partidos_jornada[] = [
@@ -52,7 +179,16 @@ function generarCalendarioEquilibrado($equipos_grupo) {
                         'tarjetas_rojas_local' => 0,
                         'tarjetas_rojas_visitante' => 0,
                         'tarjetas_amarillas_local' => 0,
-                        'tarjetas_amarillas_visitante' => 0
+                        'tarjetas_amarillas_visitante' => 0,
+                        // Nuevos campos para jugadores y valoraciones
+                        'local_jugador1' => null,
+                        'local_valoracion1' => null,
+                        'local_jugador2' => null,
+                        'local_valoracion2' => null,
+                        'visitante_jugador1' => null,
+                        'visitante_valoracion1' => null,
+                        'visitante_jugador2' => null,
+                        'visitante_valoracion2' => null
                     ];
                 }
             }
@@ -70,22 +206,23 @@ function generarCalendarioEquilibrado($equipos_grupo) {
 
 // Sistema de ranking predefinido para los equipos
 $rankings_equipos = [
-    'Liverpool' => 95,
-    'Barcelona' => 98,
-    'Francia' => 96,
-    'España' => 94,
-    'Alemania' => 92,
-    'Italia' => 90,
-    'Portugal' => 91,
-    'Inglaterra' => 93,
-    'Países Bajos' => 89,
-    'Bélgica' => 88,
-    'Croacia' => 87,
-    'Uruguay' => 86
-    // Agrega más equipos según necesites
+    'Liverpool' => 94,
+    'Barcelona' => 95,
+    'Real Madrid' => 98,
+    'Bayern Munich' => 99, // CORREGIDO
+    'Paris Saint-Germain' => 97,
+    'Manchester City' => 93,
+    'Arsenal' => 96,
+    'Atlético de Madrid' => 91,
+    'Chelsea' => 89,
+    'Inter de Milán' => 88,
+    'Borussia Dortmund' => 90, // CORREGIDO
+    'Newcastle' => 92
 ];
 
-// Función para calcular enfrentamiento directo entre dos equipos (MOVIDA FUERA de calcularTablaPosiciones)
+
+
+// Función para calcular enfrentamiento directo entre dos equipos
 function calcularEnfrentamientoDirecto($equipo1, $equipo2, $calendario) {
     $puntos_equipo1 = 0;
     $puntos_equipo2 = 0;
@@ -223,8 +360,12 @@ function calcularTablaPosiciones($equipos_grupo, $calendario) {
         if ($a['pts'] != $b['pts']) {
             return $b['pts'] - $a['pts'];
         }
+        // 2. Diferencia de goles general
+        if ($a['dg'] != $b['dg']) {
+            return $b['dg'] - $a['dg'];
+        }
         
-        // 2. Enfrentamiento directo
+        // 3. Enfrentamiento directo
         $equipos_empatados = [];
         foreach ($tabla as $equipo => $datos) {
             if ($datos['pts'] == $a['pts']) {
@@ -255,10 +396,7 @@ function calcularTablaPosiciones($equipos_grupo, $calendario) {
             }
         }
         
-        // 3. Diferencia de goles general
-        if ($a['dg'] != $b['dg']) {
-            return $b['dg'] - $a['dg'];
-        }
+        
         
         // 4. Goles a favor general
         if ($a['gf'] != $b['gf']) {
@@ -377,10 +515,21 @@ if (isset($_POST['guardar_resultado'])) {
     $tarjetas_amarillas_local = intval($_POST['tarjetas_amarillas_local']);
     $tarjetas_amarillas_visitante = intval($_POST['tarjetas_amarillas_visitante']);
     
+    // Nuevos campos para jugadores y valoraciones
+    $local_jugador1 = $_POST['local_jugador1'] ?? '';
+    $local_valoracion1 = $_POST['local_valoracion1'] ?? '';
+    $local_jugador2 = $_POST['local_jugador2'] ?? '';
+    $local_valoracion2 = $_POST['local_valoracion2'] ?? '';
+    $visitante_jugador1 = $_POST['visitante_jugador1'] ?? '';
+    $visitante_valoracion1 = $_POST['visitante_valoracion1'] ?? '';
+    $visitante_jugador2 = $_POST['visitante_jugador2'] ?? '';
+    $visitante_valoracion2 = $_POST['visitante_valoracion2'] ?? '';
+    
     // Validar datos
     if ($goles_local >= 0 && $goles_visitante >= 0 && 
         $tarjetas_rojas_local >= 0 && $tarjetas_rojas_visitante >= 0 &&
         $tarjetas_amarillas_local >= 0 && $tarjetas_amarillas_visitante >= 0) {
+        
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['jugado'] = true;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['goles_local'] = $goles_local;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['goles_visitante'] = $goles_visitante;
@@ -388,13 +537,23 @@ if (isset($_POST['guardar_resultado'])) {
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_rojas_visitante'] = $tarjetas_rojas_visitante;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_amarillas_local'] = $tarjetas_amarillas_local;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_amarillas_visitante'] = $tarjetas_amarillas_visitante;
+        
+        // Guardar datos de jugadores y valoraciones
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_jugador1'] = $local_jugador1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_valoracion1'] = $local_valoracion1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_jugador2'] = $local_jugador2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_valoracion2'] = $local_valoracion2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_jugador1'] = $visitante_jugador1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_valoracion1'] = $visitante_valoracion1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_jugador2'] = $visitante_jugador2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_valoracion2'] = $visitante_valoracion2;
     }
     
     header('Location: grupos.php');
     exit();
 }
 
-// EDITAR RESULTADO - NUEVA FUNCIONALIDAD
+// EDITAR RESULTADO
 if (isset($_POST['editar_resultado'])) {
     $grupo = $_POST['grupo'];
     $jornada_index = $_POST['jornada'];
@@ -407,16 +566,37 @@ if (isset($_POST['editar_resultado'])) {
     $tarjetas_amarillas_local = intval($_POST['tarjetas_amarillas_local']);
     $tarjetas_amarillas_visitante = intval($_POST['tarjetas_amarillas_visitante']);
     
+    // Nuevos campos para jugadores y valoraciones
+    $local_jugador1 = $_POST['local_jugador1'] ?? '';
+    $local_valoracion1 = $_POST['local_valoracion1'] ?? '';
+    $local_jugador2 = $_POST['local_jugador2'] ?? '';
+    $local_valoracion2 = $_POST['local_valoracion2'] ?? '';
+    $visitante_jugador1 = $_POST['visitante_jugador1'] ?? '';
+    $visitante_valoracion1 = $_POST['visitante_valoracion1'] ?? '';
+    $visitante_jugador2 = $_POST['visitante_jugador2'] ?? '';
+    $visitante_valoracion2 = $_POST['visitante_valoracion2'] ?? '';
+    
     // Validar datos
     if ($goles_local >= 0 && $goles_visitante >= 0 && 
         $tarjetas_rojas_local >= 0 && $tarjetas_rojas_visitante >= 0 &&
         $tarjetas_amarillas_local >= 0 && $tarjetas_amarillas_visitante >= 0) {
+        
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['goles_local'] = $goles_local;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['goles_visitante'] = $goles_visitante;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_rojas_local'] = $tarjetas_rojas_local;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_rojas_visitante'] = $tarjetas_rojas_visitante;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_amarillas_local'] = $tarjetas_amarillas_local;
         $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['tarjetas_amarillas_visitante'] = $tarjetas_amarillas_visitante;
+        
+        // Actualizar datos de jugadores y valoraciones
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_jugador1'] = $local_jugador1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_valoracion1'] = $local_valoracion1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_jugador2'] = $local_jugador2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['local_valoracion2'] = $local_valoracion2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_jugador1'] = $visitante_jugador1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_valoracion1'] = $visitante_valoracion1;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_jugador2'] = $visitante_jugador2;
+        $_SESSION['grupos_sorteados'][$grupo]['calendario'][$jornada_index][$partido_index]['visitante_valoracion2'] = $visitante_valoracion2;
     }
     
     header('Location: grupos.php');
@@ -1047,6 +1227,32 @@ body {
     margin-top: 5px;
 }
 
+.valoraciones-info {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #4CAF50;
+    padding: 8px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 6px;
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.valoracion-equipo {
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.valoracion-jugador {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    margin-top: 3px;
+}
+
 /* ===== FORMULARIOS DE RESULTADOS ===== */
 .form-resultado {
     grid-column: 1 / -1;
@@ -1067,7 +1273,6 @@ body {
     justify-content: center;
     gap: 10px;
     grid-column: 1 / -1;
-
 }
 
 .input-resultado {
@@ -1100,6 +1305,71 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+/* ===== FORMULARIO DE JUGADORES ===== */
+.form-jugadores {
+    grid-column: 1 / -1;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jugadores-equipo {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jugadores-equipo h4 {
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.jugadores-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.jugador-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.jugador-input label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.jugador-input select {
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3); /* FONDO MÁS OSCURO PARA MEJOR CONTRASTE */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--text-color); /* TEXTO BLANCO */
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.jugador-input select:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 5px rgba(233, 69, 96, 0.5);
+}
+
+.jugador-input select option {
+    background-color: #1a1a2e; /* FONDO OSCURO PARA OPCIONES */
+    color: var(--text-color); /* TEXTO BLANCO */
+}
+
+/* Estilo para el placeholder en select */
+.jugador-input select option[value=""] {
+    color: var(--text-secondary);
 }
 
 /* ===== BOTONES DE ACCIÓN ===== */
@@ -1229,8 +1499,12 @@ body {
         order: 2;
     }
     
-    .btn-guardar, .btn-editar {
+    .form-jugadores {
         order: 3;
+    }
+    
+    .btn-guardar, .btn-editar {
+        order: 4;
     }
     
     .navegacion-inferior {
@@ -1252,6 +1526,10 @@ body {
     
     .grupo-asignado {
         font-size: 1.5rem;
+    }
+    
+    .jugadores-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1518,6 +1796,31 @@ body {
                                                         <?php echo $partido['goles_local']; ?> - <?php echo $partido['goles_visitante']; ?>
                                                     </div>
                                                     <div class="equipo-visitante"><?php echo $partido['visitante']; ?></div>
+                                                    
+                                                    <!-- Mostrar valoraciones si existen -->
+                                                    <?php if ($partido['local_jugador1'] || $partido['local_jugador2'] || $partido['visitante_jugador1'] || $partido['visitante_jugador2']): ?>
+                                                        <div class="valoraciones-info">
+                                                            <div class="valoracion-equipo">
+                                                                <strong><?php echo $partido['local']; ?>:</strong>
+                                                                <?php if ($partido['local_jugador1']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['local_jugador1']; ?>: <?php echo $partido['local_valoracion1']; ?></div>
+                                                                <?php endif; ?>
+                                                                <?php if ($partido['local_jugador2']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['local_jugador2']; ?>: <?php echo $partido['local_valoracion2']; ?></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <div class="valoracion-equipo">
+                                                                <strong><?php echo $partido['visitante']; ?>:</strong>
+                                                                <?php if ($partido['visitante_jugador1']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['visitante_jugador1']; ?>: <?php echo $partido['visitante_valoracion1']; ?></div>
+                                                                <?php endif; ?>
+                                                                <?php if ($partido['visitante_jugador2']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['visitante_jugador2']; ?>: <?php echo $partido['visitante_valoracion2']; ?></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    
                                                     <?php if ($partido['tarjetas_rojas_local'] > 0 || $partido['tarjetas_rojas_visitante'] > 0): ?>
                                                         <div class="tarjetas-info">
                                                             🟥 Local: <?php echo $partido['tarjetas_rojas_local']; ?> | Visitante: <?php echo $partido['tarjetas_rojas_visitante']; ?>
@@ -1567,6 +1870,77 @@ body {
                                                             </div>
                                                         </div>
                                                         
+                                                        <!-- Formulario para jugadores y valoraciones -->
+                                                        <div class="form-jugadores">
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['local']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="local_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_local = obtenerJugadoresEquipo($partido['local'], $plantillas_equipos);
+                                                                            foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['local_jugador1'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['local_valoracion1']; ?>">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="local_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['local_jugador2'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['local_valoracion2']; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['visitante']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="visitante_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_visitante = obtenerJugadoresEquipo($partido['visitante'], $plantillas_equipos);
+                                                                            foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['visitante_jugador1'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['visitante_valoracion1']; ?>">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="visitante_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['visitante_jugador2'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['visitante_valoracion2']; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
                                                         <input type="hidden" name="grupo" value="grupo_a">
                                                         <input type="hidden" name="jornada" value="<?php echo $jornada_index; ?>">
                                                         <input type="hidden" name="partido" value="<?php echo $partido_index; ?>">
@@ -1605,6 +1979,65 @@ body {
                                                             <div class="tarjeta-grupo">
                                                                 <span style="color: #f39c12;">🟨 V:</span>
                                                                 <input type="number" name="tarjetas_amarillas_visitante" class="input-resultado" min="0" max="10" value="0">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Formulario para jugadores y valoraciones -->
+                                                        <div class="form-jugadores">
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['local']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="local_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_local = obtenerJugadoresEquipo($partido['local'], $plantillas_equipos);
+                                                                            foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="local_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['visitante']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="visitante_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_visitante = obtenerJugadoresEquipo($partido['visitante'], $plantillas_equipos);
+                                                                            foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="visitante_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         
@@ -1703,6 +2136,31 @@ body {
                                                         <?php echo $partido['goles_local']; ?> - <?php echo $partido['goles_visitante']; ?>
                                                     </div>
                                                     <div class="equipo-visitante"><?php echo $partido['visitante']; ?></div>
+                                                    
+                                                    <!-- Mostrar valoraciones si existen -->
+                                                    <?php if ($partido['local_jugador1'] || $partido['local_jugador2'] || $partido['visitante_jugador1'] || $partido['visitante_jugador2']): ?>
+                                                        <div class="valoraciones-info">
+                                                            <div class="valoracion-equipo">
+                                                                <strong><?php echo $partido['local']; ?>:</strong>
+                                                                <?php if ($partido['local_jugador1']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['local_jugador1']; ?>: <?php echo $partido['local_valoracion1']; ?></div>
+                                                                <?php endif; ?>
+                                                                <?php if ($partido['local_jugador2']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['local_jugador2']; ?>: <?php echo $partido['local_valoracion2']; ?></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <div class="valoracion-equipo">
+                                                                <strong><?php echo $partido['visitante']; ?>:</strong>
+                                                                <?php if ($partido['visitante_jugador1']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['visitante_jugador1']; ?>: <?php echo $partido['visitante_valoracion1']; ?></div>
+                                                                <?php endif; ?>
+                                                                <?php if ($partido['visitante_jugador2']): ?>
+                                                                    <div class="valoracion-jugador"><?php echo $partido['visitante_jugador2']; ?>: <?php echo $partido['visitante_valoracion2']; ?></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    
                                                     <?php if ($partido['tarjetas_rojas_local'] > 0 || $partido['tarjetas_rojas_visitante'] > 0): ?>
                                                         <div class="tarjetas-info">
                                                             🟥 Local: <?php echo $partido['tarjetas_rojas_local']; ?> | Visitante: <?php echo $partido['tarjetas_rojas_visitante']; ?>
@@ -1752,6 +2210,77 @@ body {
                                                             </div>
                                                         </div>
                                                         
+                                                        <!-- Formulario para jugadores y valoraciones -->
+                                                        <div class="form-jugadores">
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['local']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="local_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_local = obtenerJugadoresEquipo($partido['local'], $plantillas_equipos);
+                                                                            foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['local_jugador1'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['local_valoracion1']; ?>">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="local_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['local_jugador2'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['local_valoracion2']; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['visitante']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="visitante_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_visitante = obtenerJugadoresEquipo($partido['visitante'], $plantillas_equipos);
+                                                                            foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['visitante_jugador1'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['visitante_valoracion1']; ?>">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="visitante_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>" <?php echo ($partido['visitante_jugador2'] == $jugador) ? 'selected' : ''; ?>>
+                                                                                    <?php echo $jugador; ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración" 
+                                                                               value="<?php echo $partido['visitante_valoracion2']; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
                                                         <input type="hidden" name="grupo" value="grupo_b">
                                                         <input type="hidden" name="jornada" value="<?php echo $jornada_index; ?>">
                                                         <input type="hidden" name="partido" value="<?php echo $partido_index; ?>">
@@ -1790,6 +2319,65 @@ body {
                                                             <div class="tarjeta-grupo">
                                                                 <span style="color: #f39c12;">🟨 V:</span>
                                                                 <input type="number" name="tarjetas_amarillas_visitante" class="input-resultado" min="0" max="10" value="0">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Formulario para jugadores y valoraciones -->
+                                                        <div class="form-jugadores">
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['local']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="local_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_local = obtenerJugadoresEquipo($partido['local'], $plantillas_equipos);
+                                                                            foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="local_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_local as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="local_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="jugadores-equipo">
+                                                                <h4><?php echo $partido['visitante']; ?> - Jugadores Destacados</h4>
+                                                                <div class="jugadores-grid">
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 1:</label>
+                                                                        <select name="visitante_jugador1">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php 
+                                                                            $jugadores_visitante = obtenerJugadoresEquipo($partido['visitante'], $plantillas_equipos);
+                                                                            foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion1" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                    <div class="jugador-input">
+                                                                        <label>Jugador 2:</label>
+                                                                        <select name="visitante_jugador2">
+                                                                            <option value="">Seleccionar jugador</option>
+                                                                            <?php foreach ($jugadores_visitante as $jugador): ?>
+                                                                                <option value="<?php echo $jugador; ?>"><?php echo $jugador; ?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                        <input type="number" name="visitante_valoracion2" class="input-resultado" min="1" max="10" step="0.01" placeholder="Valoración">
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         
@@ -1871,12 +2459,12 @@ body {
         }
     }
     
-    // Animación de sorteo de equipos CORREGIDA
+    // Animación de sorteo de equipos
     <?php if ($mostrar_animacion): ?>
         const equiposMezclados = <?php echo json_encode($_SESSION['animacion_sorteo']['equipos_mezclados']); ?>;
         const totalEquipos = equiposMezclados.length;
         let equipoIndex = 0;
-        const intervalo = 3000; // 3 segundos entre equipos
+        const intervalo = 1; // 10 segundos entre equipos
         
         // Función para crear efecto de confeti
         function crearConfeti() {
@@ -1906,8 +2494,6 @@ body {
                 const item = equiposMezclados[equipoIndex];
                 const equipo = item.equipo;
                 const grupo = item.grupo;
-                
-                console.log('Mostrando equipo:', equipoIndex, 'de', totalEquipos, '-', equipo, '- Grupo', grupo);
                 
                 // Aplicar estilos según el grupo
                 const grupoColor = grupo === 'A' ? 'grupo-a-color' : 'grupo-b-color';
@@ -1946,7 +2532,6 @@ body {
                     setTimeout(mostrarEquipo, intervalo);
                 } else {
                     // Último equipo - preparar final
-                    console.log('Animación completada');
                     setTimeout(() => {
                         // Recargar para mostrar contenido completo
                         window.location.href = 'grupos.php?completar_animacion=1';
@@ -1955,9 +2540,7 @@ body {
             }
         }
         
-        
         // Iniciar animación después de un breve delay
-        console.log('Iniciando animación con', totalEquipos, 'equipos');
         setTimeout(mostrarEquipo, 1000);
     <?php endif; ?>
     </script>

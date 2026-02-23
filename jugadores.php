@@ -30,7 +30,7 @@ if (isset($_POST['eliminar_jugador'])) {
 if (isset($_POST['agregar_jugador']) && !empty($_POST['nuevo_jugador'])) {
     $nuevo_jugador = trim($_POST['nuevo_jugador']);
     
-    if (count($_SESSION['jugadores']) < 8 && !in_array($nuevo_jugador, $_SESSION['jugadores'])) {
+    if (count($_SESSION['jugadores']) < 9 && !in_array($nuevo_jugador, $_SESSION['jugadores'])) {
         $_SESSION['jugadores'][] = $nuevo_jugador;
     }
     
@@ -540,13 +540,13 @@ body {
             <div class="header-jugadores">
                 <h2>👤 Gestión de Jugadores</h2>
                 <div class="contador-jugadores">
-                    <?php echo count($_SESSION['jugadores']); ?> de 8 jugadores
+                    <?php echo count($_SESSION['jugadores']); ?> de 9 jugadores
                 </div>
             </div>
             
-            <?php if (count($_SESSION['jugadores']) < 8): ?>
+            <?php if (count($_SESSION['jugadores']) < 9): ?>
                 <div class="mensaje-alerta">
-                    <strong>⚠️ Atención:</strong> Necesitas tener 8 jugadores registrados para poder realizar el sorteo de equipos.
+                    <strong>⚠️ Atención:</strong> Necesitas tener 9 jugadores registrados para poder realizar el sorteo de equipos.
                 </div>
             <?php endif; ?>
             
@@ -612,7 +612,7 @@ body {
                 <?php endif; ?>
             </div>
             
-            <?php if (count($_SESSION['jugadores']) < 8): ?>
+            <?php if (count($_SESSION['jugadores']) < 9): ?>
                 <div class="form-agregar-jugador">
                     <h3 style="color: var(--primary); margin-bottom: 20px;">➕ Agregar Nuevo Jugador</h3>
                     <form method="POST">
@@ -625,14 +625,14 @@ body {
                             </button>
                         </div>
                         <p style="color: #6c757d; margin-top: 10px; font-size: 0.9rem;">
-                            Quedan <?php echo 8 - count($_SESSION['jugadores']); ?> espacios disponibles.
+                            Quedan <?php echo 9 - count($_SESSION['jugadores']); ?> espacios disponibles.
                         </p>
                     </form>
                 </div>
             <?php else: ?>
                 <div style="text-align: center; padding: 20px; background: #d4edda; border-radius: 10px; margin-top: 20px;">
                     <p style="color: #155724; font-weight: 600; margin: 0;">
-                        ✅ ¡Perfecto! Tienes los 8 jugadores necesarios. 
+                        ✅ ¡Perfecto! Tienes los 9 jugadores necesarios. 
                         <a href="sorteo.php" style="color: #155724; text-decoration: underline;">
                             Puedes proceder al sorteo de equipos
                         </a>
@@ -640,7 +640,7 @@ body {
                 </div>
             <?php endif; ?>
             
-            <?php if (!empty($_SESSION['jugadores']) && count($_SESSION['jugadores']) >= 8): ?>
+            <?php if (!empty($_SESSION['jugadores']) && count($_SESSION['jugadores']) >= 9): ?>
                 <div style="margin-top: 30px; padding: 20px; background: #2b4163; border-radius: 10px;">
                     <h4 style="color: var(--primary); margin-bottom: 15px;">📊 Resumen del Estado</h4>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
@@ -648,21 +648,21 @@ body {
                             <div style="font-size: 2rem; margin-bottom: 5px;">👤</div>
                             <div style="font-weight: 600;">Jugadores</div>
                             <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                                <?php echo count($_SESSION['jugadores']); ?>/8
+                                <?php echo count($_SESSION['jugadores']); ?>/9
                             </div>
                         </div>
-                        <div style="text-align: center; padding: 15px; background: #1e375b; border-radius: 8px;">
+                        <div style="text-align: center; padding: 15px; background: #1e375b; border-radius: 9px;">
                             <div style="font-size: 2rem; margin-bottom: 5px;">⚽</div>
                             <div style="font-weight: 600;">Equipos Asignados</div>
                             <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                                <?php echo $jugadores_con_equipo; ?>/8
+                                <?php echo $jugadores_con_equipo; ?>/9
                             </div>
                         </div>
-                        <div style="text-align: center; padding: 15px; background: #1e375b; border-radius: 8px;">
+                        <div style="text-align: center; padding: 15px; background: #1e375b; border-radius: 9px;">
                             <div style="font-size: 2rem; margin-bottom: 5px;">📋</div>
                             <div style="font-weight: 600;">Estado</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: <?php echo $jugadores_con_equipo == 8 ? '#28a745' : '#ffc107'; ?>;">
-                                <?php echo $jugadores_con_equipo == 8 ? 'Completado' : 'Pendiente'; ?>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: <?php echo $jugadores_con_equipo == 9 ? '#29a745' : '#ffc107'; ?>;">
+                                <?php echo $jugadores_con_equipo == 9 ? 'Completado' : 'Pendiente'; ?>
                             </div>
                         </div>
                     </div>
@@ -672,7 +672,7 @@ body {
         
         <div class="navegacion-inferior">
             <a href="index.php" class="button">🏠 Volver al Inicio</a>
-            <?php if (count($_SESSION['jugadores']) >= 8): ?>
+            <?php if (count($_SESSION['jugadores']) >= 9): ?>
                 <a href="sorteo.php" class="button button-success">🎲 Ir al Sorteo</a>
             <?php endif; ?>
         </div>
